@@ -1,6 +1,6 @@
 import numpy as np
 
-class SPIRIT:
+class SPIRIT():
     left_switcher ={
         "este":"norte",
         "norte":"oeste",
@@ -25,10 +25,10 @@ class SPIRIT:
         "llano":5/6
     }
     def __init__(self, x = 0, y = 0, o = "este"):
-        self.pos=[x, y]
+        self.pos=np.array([x, y])
         self.orientation = o
         self.time = 0.0
-        self.movements = np.array(self.pos)
+        self.movements = np.array([self.pos])
     def rotate_left(self):
         self.orientation = self.left_switcher.get(self.orientation)
         self.time += self.weights.get("rotar")
@@ -36,6 +36,7 @@ class SPIRIT:
         self.orientation = self.right_switcher.get(self.orientation)
         self.time += self.weights.get("rotar")
     def commit(self, type="llano"):
-        self.orientation+=self.commit_switcher.get(self.orientation)
+        self.pos+=self.commit_switcher.get(self.orientation)
+        self.movements.__add__(self.pos)
         self.time+=self.weights.get(type)
         
