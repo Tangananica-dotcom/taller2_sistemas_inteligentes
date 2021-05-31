@@ -7,6 +7,9 @@ from random import randrange
 from Node import Node
 import random
 import pandas as pd
+
+import time
+import datetime
     
 np.set_printoptions(threshold=sys.maxsize)
 # Esta clase representa un nodo
@@ -57,8 +60,13 @@ def best_first_search(map, start, end, sprt):
             orientation = next[1]
             if(pos <(0,0)  or pos >= tuple(np.shape(map))):
                 continue
+            
             # Obtener el tipo de terreno (value)
-            map_value = map[pos]
+            try:
+                map_value = map[pos]
+            except IndexError:
+                map_value = 2
+            
             # Con el value, comprobar si el nodo es una pared (obstaculo).
             if(map_value == 2):
                 continue
@@ -94,7 +102,10 @@ def main():
     #m columnas
     n=8
     m=16
+    
+    
     arr =generator.generate_map(n,m)
+    
     
     # generar posicion de inicio
     # START 
@@ -106,6 +117,7 @@ def main():
     goal_i = randrange(n-1)
     goal_j = randrange(m-1)
 
+    # Probar que la posicion de inicio y fin no sean la misma
     while(start_i == goal_i and start_j == goal_j):
         start_i = randrange(n-1)
         start_j = randrange(m-1)
@@ -115,10 +127,19 @@ def main():
 
     arr[start_i][start_j] = 3
     arr[goal_i][goal_j] = -1
-
-
-        
     
+    
+    """
+    # generar posicion de inicio FIJA
+    # START 
+    start_i = 1 #fila de inicio
+    start_j = 1 #columna de inicio
+    
+    # generar posicion de termino FIJA
+    # GOAL
+    goal_i = (n-1)
+    goal_j = (m-1)
+    """
     ###################################################################################################
     
     
@@ -137,7 +158,19 @@ def main():
     print("Start: {0} ,Goal: {1} ".format((start_i, start_j), (goal_i, goal_j)))
     print("Initial Orientation: ", sprt.orientation)
 
+    # comenzar a contar tiempo
+    start_time = datetime.datetime.now()
+    
     best_first_search(arr, start, end, sprt)
+    
+    # terminar de contar tiempo
+    end_time = datetime.datetime.now()
+    
+    #Calcular milisegundos
+    time_diff = (end_time - start_time)
+    execution_time = time_diff.total_seconds() * 1000
+    
+    
     remap = np.array(arr, dtype='O')
     remap[remap==0]='-'
     remap[remap==1]='#'
@@ -155,6 +188,8 @@ def main():
     print('Path: ',sprt.path)
     print("Turns: ", sprt.turns)
     print("Time: ", sprt.time)
+    print("Tiempo de ejecucion del algoritmo: ",execution_time, " milisegundos")
+    print("Tamaño del mapa: ",n*m, " [m2]")
 
 # Tell python to run main method
 if __name__ == "__main__": main()
