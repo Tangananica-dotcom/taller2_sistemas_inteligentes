@@ -62,6 +62,7 @@ def best_first_search(map, start, end, sprt):
                 continue
             
             # Obtener el tipo de terreno (value)
+            # Si se sale de la lista es porque es una pared
             try:
                 map_value = map[pos]
             except IndexError:
